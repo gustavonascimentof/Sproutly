@@ -2,7 +2,7 @@
 
 PWA que transforma o cuidado com plantas caseiras em jogo: um companion que conversa, sequência de cuidado, XP e missões geradas a partir do **clima real** da sua região. Projeto da disciplina UPx (Facens, 2026/S2).
 
-## Estado do MVP (marco 2)
+## Estado do MVP 
 | Recurso | Situação |
 |---|---|
 | Home (companion, sequência, XP, missões, plantas) | Funcionando, salva no navegador |
@@ -38,11 +38,3 @@ src/App.tsx             interface e estado (persistido em localStorage)
 ## Créditos e licenças de dados
 Clima: [Open-Meteo](https://open-meteo.com) (CC BY 4.0, uso não comercial). Identificação de plantas (planejado): [Pl@ntNet](https://plantnet.org), com atribuição.
 
-## Link público (GitHub Pages)
-No repositório: Settings > Pages > Source: **GitHub Actions**. A cada push na `main`, o workflow testa, compila e publica.
-
-## Publicar no GitHub
-```bash
-git remote add origin https://github.com/SEU_USUARIO/sproutly.git
-git branch -M main && git push -u origin main
-```

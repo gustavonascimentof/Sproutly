@@ -1,0 +1,24 @@
+:root{--bg:#e6f9e8;--card:#fff;--verde:#2f6b4a;--folha:#5bbf3a;--sol:#ffc53d;--texto:#14301f;--suave:#5c7566;--coral:#ff9a7a;--borda:#d3ecd6;color-scheme:light}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--texto);font:400 16px/1.45 Nunito,system-ui,sans-serif}
+h1,h2,h3{font-family:Fredoka,Nunito,sans-serif;font-weight:600;margin:0}h1{font-size:28px}h2{font-size:18px}h3{font-size:16px}p{margin:.2rem 0}small{color:var(--suave)}
+.app{max-width:430px;margin:0 auto;min-height:100dvh;padding:0 16px calc(96px + env(safe-area-inset-bottom));position:relative}
+.topo{display:flex;justify-content:space-between;align-items:center;padding:calc(12px + env(safe-area-inset-top)) 0 8px}
+.marca{display:flex;align-items:center;gap:6px;font:600 20px Fredoka,sans-serif;color:var(--verde)}.marca .mascote{width:34px;height:34px}
+.pilulas{display:flex;gap:6px}.pilulas b{background:#fff;border-radius:99px;padding:3px 10px;font-size:13px}
+.sub{color:var(--suave);margin-bottom:12px}.aviso{background:#fff3cf;border-radius:12px;padding:8px 12px;font-size:14px}
+.cartao{background:var(--card);border-radius:22px;padding:16px;margin:12px 0;box-shadow:0 3px 0 var(--borda)}
+.companion{display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:center}.mascote{width:100%;background:#e6f9e8;border-radius:20px}
+.companion h2 small{margin-left:8px;font:600 12px Nunito;color:#9a6b44}.balao{background:#eaf7ec;border-radius:14px;padding:8px 12px;margin:8px 0;font-size:15px}
+.barra{height:10px;background:#dcefdf;border-radius:99px;overflow:hidden;margin:6px 0}.barra i{display:block;height:100%;background:var(--verde);border-radius:99px;transition:width .4s}.barra i.seca{background:var(--coral)}
+.selo{float:right;background:#e0f2e3;border-radius:99px;padding:2px 10px;font:700 12px Nunito;color:var(--verde)}
+.semana{display:flex;justify-content:space-between;margin-top:12px}.dia{display:grid;justify-items:center;gap:4px;font-size:12px;color:var(--suave)}
+.dia svg{width:34px;height:34px;padding:9px;border-radius:50%;background:#e6f2e8;color:#a7c4ad}.dia.feito svg{background:#bfe8c6;color:var(--verde)}.dia.hoje svg{outline:3px solid var(--verde);outline-offset:1px}
+.nota{font-size:13px;color:var(--suave);margin-top:10px}.secao{margin:22px 0 4px}.xp{background:#fff0c2;border-radius:99px;padding:1px 8px;font-size:12px;margin-left:6px}
+.missao p{font-size:14px;color:var(--suave)}.botao{width:100%;margin-top:12px;padding:13px;border:0;border-radius:16px;background:var(--verde);color:#fff;font:600 16px Fredoka,sans-serif;box-shadow:0 4px 0 #1e4a32;cursor:pointer;display:flex;gap:8px;justify-content:center;align-items:center}
+.botao:active{transform:translateY(3px);box-shadow:0 1px 0 #1e4a32}.botao:disabled{background:#9dc3ac;box-shadow:none;cursor:default}
+.carrossel{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px}.planta{min-width:190px;scroll-snap-align:start;margin:4px 0}
+.foto{height:110px;border-radius:16px;background:linear-gradient(#f0fbf1,#d8f0dc);display:grid;place-items:center;font-size:48px;margin-bottom:8px}.alerta{color:#b5532f;font-weight:700}.ok{color:var(--verde);font-weight:700}
+.vazio{text-align:center;padding:48px 16px}
+.abas{position:fixed;bottom:0;left:50%;translate:-50% 0;width:min(430px,100%);display:flex;justify-content:space-around;background:#f4fff5ee;backdrop-filter:blur(8px);padding:8px 8px calc(8px + env(safe-area-inset-bottom));border-top:1px solid var(--borda)}
+.abas button{border:0;background:none;font:700 12px Nunito;color:var(--suave);padding:10px 8px;border-radius:14px;cursor:pointer}.abas .ativa{background:#bfe8c6;color:var(--verde)}
+button:focus-visible{outline:3px solid var(--sol);outline-offset:2px}@media (prefers-reduced-motion:reduce){*{transition:none!important}}

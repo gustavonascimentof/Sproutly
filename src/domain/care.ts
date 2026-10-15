@@ -12,14 +12,21 @@ export interface Species {
   /** Se recebe chuva (varanda/quintal) ou fica dentro de casa. */
   externo: boolean;
   luz: string;
+  raridade: 'Comum' | 'Incomum' | 'Raro';
+  categoria: string;
 }
 
 export interface DayForecast { date: string; et0: number; rain: number; tmax: number; uv: number }
 
 export const ESPECIES: Species[] = [
-  { id: 'manjericao', nome: 'Manjericão', cientifico: 'Ocimum basilicum', kc: 1.1, capacidadeMm: 40, capacidadeMl: 450, limite: 40, externo: true, luz: '6h ou mais de sol' },
-  { id: 'costela', nome: 'Costela-de-Adão', cientifico: 'Monstera deliciosa', kc: 0.7, capacidadeMm: 60, capacidadeMl: 600, limite: 30, externo: false, luz: 'Luz difusa' },
-  { id: 'alecrim', nome: 'Alecrim', cientifico: 'Salvia rosmarinus', kc: 0.6, capacidadeMm: 55, capacidadeMl: 500, limite: 25, externo: true, luz: 'Sol pleno' },
+  { id: 'manjericao', nome: 'Manjericão', cientifico: 'Ocimum basilicum', kc: 1.1, capacidadeMm: 40, capacidadeMl: 450, limite: 40, externo: true, luz: '6h ou mais de sol', raridade: 'Comum', categoria: 'Erva' },
+  { id: 'costela', nome: 'Costela-de-Adão', cientifico: 'Monstera deliciosa', kc: 0.7, capacidadeMm: 60, capacidadeMl: 600, limite: 30, externo: false, luz: 'Luz difusa', raridade: 'Raro', categoria: 'Folhagem' },
+  { id: 'alecrim', nome: 'Alecrim', cientifico: 'Salvia rosmarinus', kc: 0.6, capacidadeMm: 55, capacidadeMl: 500, limite: 25, externo: true, luz: 'Sol pleno', raridade: 'Incomum', categoria: 'Erva' },
+  { id: 'hortela', nome: 'Hortelã', cientifico: 'Mentha spicata', kc: 1.0, capacidadeMm: 45, capacidadeMl: 450, limite: 40, externo: true, luz: 'Sol e meia-sombra', raridade: 'Comum', categoria: 'Erva' },
+  { id: 'tomate', nome: 'Tomate-cereja', cientifico: 'Solanum lycopersicum', kc: 1.15, capacidadeMm: 50, capacidadeMl: 800, limite: 40, externo: true, luz: 'Sol pleno', raridade: 'Incomum', categoria: 'Frutífera' },
+  { id: 'lavanda', nome: 'Lavanda', cientifico: 'Lavandula angustifolia', kc: 0.6, capacidadeMm: 50, capacidadeMl: 450, limite: 25, externo: true, luz: 'Sol pleno', raridade: 'Raro', categoria: 'Aroma' },
+  { id: 'cebolinha', nome: 'Cebolinha', cientifico: 'Allium schoenoprasum', kc: 0.9, capacidadeMm: 40, capacidadeMl: 400, limite: 40, externo: true, luz: 'Sol e meia-sombra', raridade: 'Comum', categoria: 'Erva' },
+  { id: 'echeveria', nome: 'Echeveria', cientifico: 'Echeveria elegans', kc: 0.3, capacidadeMm: 70, capacidadeMl: 300, limite: 15, externo: false, luz: 'Muita luz indireta', raridade: 'Incomum', categoria: 'Suculenta' },
 ];
 
 const limitar = (v: number, min = 0, max = 100) => Math.min(max, Math.max(min, v));
@@ -94,3 +101,6 @@ export function calcularSequencia(logs: Record<string, RegistroDia>, hoje: Date)
 
 export const XP_POR_NIVEL = 500;
 export const nivelDe = (xp: number) => ({ nivel: Math.floor(xp / XP_POR_NIVEL) + 1, atual: xp % XP_POR_NIVEL, falta: XP_POR_NIVEL - (xp % XP_POR_NIVEL) });
+
+/** Nível da planta sobe a cada 3 regas corretas (máx. 5). */
+export const nivelPlanta = (cuidados: number) => Math.min(5, 1 + Math.floor(cuidados / 3));

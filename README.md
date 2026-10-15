@@ -2,14 +2,16 @@
 
 PWA que transforma o cuidado com plantas caseiras em jogo: um companion que conversa, sequência de cuidado, XP e missões geradas a partir do **clima real** da sua região. Projeto da disciplina UPx (Facens, 2026/S2).
 
-## Estado do MVP (marco 1)
+## Estado do MVP (marco 2)
 | Recurso | Situação |
 |---|---|
 | Home (companion, sequência, XP, missões, plantas) | Funcionando, salva no navegador |
 | Motor de cuidado (balanço hídrico com ET0 do Open-Meteo) | Funcionando e testado |
 | Streak saudável (não regar sem precisar também conta) | Funcionando e testado |
-| Herbário, Missões & Desafios, Comunidade, Ajustes | Próximos marcos (abas já existem) |
-| Reconhecimento por foto (PlantNet) | Próximo marco, via função serverless |
+| Herbário (coleção, níveis, cadastro com foto e espécie confirmada) | Funcionando |
+| Missões & Desafios (diárias geradas pelas necessidades, metas semanais, conquistas) | Funcionando |
+| Comunidade, Ajustes | Próximos marcos (abas já existem) |
+| Reconhecimento automático por foto (PlantNet) | Pendente: exige chave e função serverless. Hoje o usuário escolhe a espécie |
 
 ## Como rodar
 Requisitos: Node 20+ (testado com 22).
@@ -35,6 +37,9 @@ src/App.tsx             interface e estado (persistido em localStorage)
 
 ## Créditos e licenças de dados
 Clima: [Open-Meteo](https://open-meteo.com) (CC BY 4.0, uso não comercial). Identificação de plantas (planejado): [Pl@ntNet](https://plantnet.org), com atribuição.
+
+## Link público (GitHub Pages)
+No repositório: Settings > Pages > Source: **GitHub Actions**. A cada push na `main`, o workflow testa, compila e publica.
 
 ## Publicar no GitHub
 ```bash

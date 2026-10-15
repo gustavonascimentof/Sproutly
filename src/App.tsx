@@ -1,24 +1,25 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ESPECIES, aplicarRega, calcularSequencia, chaveDia, envelhecer, gerarInsight, mlSugerido, nivelDe, precisaRegar, rotuloUmidade, type DayForecast, type RegistroDia } from './domain/care';
+import { ESPECIES, aplicarRega, calcularSequencia, chaveDia, envelhecer, gerarInsight, mlSugerido, nivelDe, precisaRegar, rotuloUmidade, type DayForecast } from './domain/care';
 import { CLIMA_OFFLINE, buscarClima } from './services/weather';
 import { Mascote } from './components/Mascote';
-
-interface Planta { id: string; apelido: string; especie: string; local: string; umidade: number; medidoEm: string }
-interface Estado { plantas: Planta[]; logs: Record<string, RegistroDia>; xp: number }
+import { Herbario, type NovaPlanta } from './components/Herbario';
+import { Missoes } from './components/Missoes';
+import { chaveMissao, conquistas, metasSemanais, missoesDoDia, type Missao, type Meta } from './domain/missions';
+import type { Estado } from './types';
 
 const hojeChave = () => chaveDia(new Date());
 const INICIAL: Estado = {
-  xp: 340, logs: {},
+  xp: 340, logs: {}, extras: {},
   plantas: [
-    { id: 'p1', apelido: 'Basil Buddy', especie: 'manjericao', local: 'Cozinha', umidade: 24, medidoEm: hojeChave() },
-    { id: 'p2', apelido: 'Monty', especie: 'costela', local: 'Sala', umidade: 62, medidoEm: hojeChave() },
-    { id: 'p3', apelido: 'Rosie', especie: 'alecrim', local: 'Varanda', umidade: 48, medidoEm: hojeChave() },
+    { id: 'p1', apelido: 'Basil Buddy', especie: 'manjericao', local: 'Cozinha', umidade: 24, medidoEm: hojeChave(), cuidados: 0 },
+    { id: 'p2', apelido: 'Monty', especie: 'costela', local: 'Sala', umidade: 62, medidoEm: hojeChave(), cuidados: 0 },
+    { id: 'p3', apelido: 'Rosie', especie: 'alecrim', local: 'Varanda', umidade: 48, medidoEm: hojeChave(), cuidados: 0 },
   ],
 };
 
 function usePersistido(): [Estado, (f: (e: Estado) => Estado) => void] {
   const [estado, setEstado] = useState<Estado>(() => {
-    try { return JSON.parse(localStorage.getItem('sproutly:v1') ?? '') as Estado; } catch { return INICIAL; }
+    try { return { ...INICIAL, ...(JSON.parse(localStorage.getItem('sproutly:v1') ?? '') as Partial<Estado>) }; } catch { return INICIAL; }
   });
   useEffect(() => { try { localStorage.setItem('sproutly:v1', JSON.stringify(estado)); } catch { /* armazenamento indisponível */ } }, [estado]);
   return [estado, (f) => setEstado(f)];
@@ -57,10 +58,18 @@ export default function App() {
     const alvo = plantas.find((p) => p.id === id)!;
     const ml = mlSugerido(alvo.u, alvo.sp);
     return { ...e, xp: e.xp + 20,
-      logs: { ...e.logs, [hoje]: { acao: 'water', precisava: true } },
-      plantas: e.plantas.map((p) => (p.id === id ? { ...p, umidade: aplicarRega(alvo.u, alvo.sp, ml), medidoEm: hoje } : p)) };
+      logs: { ...e.logs, [hoje]: { acao: 'water', precisava: true } }, extras: { ...e.extras, [chaveMissao(hoje, 'regar', id)]: true },
+      plantas: e.plantas.map((p) => (p.id === id ? { ...p, umidade: aplicarRega(alvo.u, alvo.sp, ml), medidoEm: hoje, cuidados: p.cuidados + 1 } : p)) };
   });
   const conferir = () => atualizar((e) => ({ ...e, xp: e.xp + 15, logs: { ...e.logs, [hoje]: { acao: 'checked', precisava: precisam > 0 } } }));
+
+  const girar = (id: string) => atualizar((e) => ({ ...e, xp: e.xp + 15, extras: { ...e.extras, [chaveMissao(hoje, 'girar', id)]: true } }));
+  const adicionar = (n: NovaPlanta) => atualizar((e) => ({ ...e, xp: e.xp + 30, plantas: [...e.plantas, { ...n, id: `p${Date.now()}`, umidade: 60, medidoEm: hoje, cuidados: 0 }] }));
+  const resgatar = (m: Meta, chave: string) => atualizar((e) => ({ ...e, xp: e.xp + m.xp, extras: { ...e.extras, [chave]: true } }));
+  const concluir = (m: Missao) => (m.tipo === 'regar' ? regar(m.plantaId) : girar(m.plantaId));
+  const especiesN = new Set(plantas.map((p) => p.especie)).size;
+  const seg = new Date(); seg.setDate(seg.getDate() - ((seg.getDay() + 6) % 7));
+  const semanaChave = chaveDia(seg);
 
   const semana = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'].map((nome, i) => {
     const d = new Date(); d.setDate(d.getDate() - ((d.getDay() + 6) % 7) + i);
@@ -77,7 +86,9 @@ export default function App() {
 
       <main>
         {aba !== 'Home' ? (
-          <section className="cartao vazio"><h2>{aba}</h2><p>Esta tela entra na próxima etapa do MVP.</p></section>
+          aba === 'Dex' ? <Herbario plantas={plantas} onAdicionar={adicionar} />
+          : aba === 'Missões' ? <Missoes missoes={missoesDoDia(plantas, estado.extras, hoje)} metas={metasSemanais(sequencia, especiesN, plantas.reduce((t, p) => t + p.cuidados, 0))} resgatadas={estado.extras} semana={semanaChave} conquistas={conquistas(sequencia, especiesN, plantas.length)} onConcluir={concluir} onResgatar={resgatar} />
+          : <section className="cartao vazio"><h2>{aba}</h2><p>Esta tela entra na próxima etapa do MVP.</p></section>
         ) : (<>
           <h1>Bom dia! 🌱</h1>
           <p className="sub">{precisam === 0 ? 'Suas plantinhas estão em dia hoje.' : `${precisam} plantinha${precisam > 1 ? 's' : ''} precisa${precisam > 1 ? 'm' : ''} de atenção hoje`}</p>
